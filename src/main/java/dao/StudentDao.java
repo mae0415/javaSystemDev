@@ -11,22 +11,15 @@ import bean.Student;
 
 public class StudentDao extends Dao {
 
-    // ★★★【重要】baseSql を必ず初期化する ★★★
     private String baseSql = "select * from student where school_cd=?";
 
-    /**
-     * 学生番号を指定して学生一人を取得する
-     */
     public Student get(String no) throws Exception {
-
         Student student = new Student();
         Connection connection = getConnection();
         PreparedStatement statement = null;
 
         try {
-            statement = connection.prepareStatement(
-                "select * from student where no=?"
-            );
+            statement = connection.prepareStatement("select * from student where no=?");
             statement.setString(1, no);
             ResultSet rSet = statement.executeQuery();
 
@@ -38,13 +31,10 @@ public class StudentDao extends Dao {
                 student.setEntYear(rSet.getInt("ent_year"));
                 student.setClassNum(rSet.getString("class_num"));
                 student.setAttend(rSet.getBoolean("is_attend"));
-                student.setSchool(
-                    schoolDao.get(rSet.getString("school_cd"))
-                );
+                student.setSchool(schoolDao.get(rSet.getString("school_cd")));
             } else {
                 student = null;
             }
-
         } finally {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
@@ -53,12 +43,7 @@ public class StudentDao extends Dao {
         return student;
     }
 
-    /**
-     * ResultSet → List<Student> 変換
-     */
-    private List<Student> postFilter(ResultSet rSet, School school)
-            throws Exception {
-
+    private List<Student> postFilter(ResultSet rSet, School school) throws Exception {
         List<Student> list = new ArrayList<>();
 
         while (rSet.next()) {
@@ -74,13 +59,7 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    /**
-     * 学校・入学年度・クラス指定
-     */
-    public List<Student> filter(
-            School school, int entYear, String classNum, boolean isAttend)
-            throws Exception {
-
+    public List<Student> filter(School school, int entYear, String classNum, boolean isAttend) throws Exception {
         List<Student> list;
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -90,17 +69,13 @@ public class StudentDao extends Dao {
         String conditionIsAttend = isAttend ? " and is_attend=true" : "";
 
         try {
-            statement = connection.prepareStatement(
-                baseSql + condition + conditionIsAttend + order
-            );
-
+            statement = connection.prepareStatement(baseSql + condition + conditionIsAttend + order);
             statement.setString(1, school.getCd());
             statement.setInt(2, entYear);
             statement.setString(3, classNum);
 
             ResultSet rSet = statement.executeQuery();
             list = postFilter(rSet, school);
-
         } finally {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
@@ -109,13 +84,7 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    /**
-     * 学校・入学年度指定
-     */
-    public List<Student> filter(
-            School school, int entYear, boolean isAttend)
-            throws Exception {
-
+    public List<Student> filter(School school, int entYear, boolean isAttend) throws Exception {
         List<Student> list;
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -125,16 +94,12 @@ public class StudentDao extends Dao {
         String conditionIsAttend = isAttend ? " and is_attend=true" : "";
 
         try {
-            statement = connection.prepareStatement(
-                baseSql + condition + conditionIsAttend + order
-            );
-
+            statement = connection.prepareStatement(baseSql + condition + conditionIsAttend + order);
             statement.setString(1, school.getCd());
             statement.setInt(2, entYear);
 
             ResultSet rSet = statement.executeQuery();
             list = postFilter(rSet, school);
-
         } finally {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
@@ -143,12 +108,7 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    /**
-     * 学校のみ指定
-     */
-    public List<Student> filter(School school, boolean isAttend)
-            throws Exception {
-
+    public List<Student> filter(School school, boolean isAttend) throws Exception {
         List<Student> list;
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -157,15 +117,11 @@ public class StudentDao extends Dao {
         String conditionIsAttend = isAttend ? " and is_attend=true" : "";
 
         try {
-            statement = connection.prepareStatement(
-                baseSql + conditionIsAttend + order
-            );
-
+            statement = connection.prepareStatement(baseSql + conditionIsAttend + order);
             statement.setString(1, school.getCd());
 
             ResultSet rSet = statement.executeQuery();
             list = postFilter(rSet, school);
-
         } finally {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
@@ -174,11 +130,7 @@ public class StudentDao extends Dao {
         return list;
     }
 
-    /**
-     * 登録・更新
-     */
     public boolean save(Student student) throws Exception {
-
         Connection connection = getConnection();
         PreparedStatement statement = null;
         int count;
@@ -188,41 +140,27 @@ public class StudentDao extends Dao {
 
             if (old == null) {
                 statement = connection.prepareStatement(
-                    "INSERT INTO student(no, name, ent_year, class_num, is_attend, school_cd) " +
-                    "VALUES(?, ?, ?, ?, ?, ?)"
+                    "INSERT INTO student(no, name, ent_year, class_num, is_attend, school_cd) VALUES(?, ?, ?, ?, ?, ?)"
                 );
-
                 statement.setString(1, student.getNo());
                 statement.setString(2, student.getName());
                 statement.setInt(3, student.getEntYear());
                 statement.setString(4, student.getClassNum());
                 statement.setBoolean(5, student.isAttend());
-                statement.setString(6,
-                    student.getSchool() != null
-                        ? student.getSchool().getCd()
-                        : null
-                );
-
+                statement.setString(6, student.getSchool() != null ? student.getSchool().getCd() : null);
             } else {
                 statement = connection.prepareStatement(
-                    "UPDATE student SET name=?, ent_year=?, class_num=?, " +
-                    "is_attend=?, school_cd=? WHERE no=?"
+                    "UPDATE student SET name=?, ent_year=?, class_num=?, is_attend=?, school_cd=? WHERE no=?"
                 );
-
                 statement.setString(1, student.getName());
                 statement.setInt(2, student.getEntYear());
                 statement.setString(3, student.getClassNum());
                 statement.setBoolean(4, student.isAttend());
-                statement.setString(5,
-                    student.getSchool() != null
-                        ? student.getSchool().getCd()
-                        : null
-                );
+                statement.setString(5, student.getSchool() != null ? student.getSchool().getCd() : null);
                 statement.setString(6, student.getNo());
             }
 
             count = statement.executeUpdate();
-
         } finally {
             if (statement != null) statement.close();
             if (connection != null) connection.close();

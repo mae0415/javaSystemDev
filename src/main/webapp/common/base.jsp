@@ -12,14 +12,12 @@
 </head>
 <body>
     <div id="wrapper" class="container">
-        <%-- ヘッダー：背景色・デザイン維持 --%>
         <header class="d-flex flex-wrap justify-content-center py-3 px-5 mb-4 border-bottom border-2 bg-primary bg-opacity-10 bg-gradient">
             <c:import url="/common/header.jsp" />
         </header>
 
         <div class="row justify-content-center">
             <c:choose>
-                <%-- ★ログイン状態の判定：セッションにuserがいればサイドバーを表示 --%>
                 <c:when test="${not empty user}">
                     <nav class="col-3" style="min-height:40rem;">
                         <c:import url="/common/navigation.jsp" />
@@ -30,7 +28,6 @@
                 </c:when>
 
                 <c:otherwise>
-                    <%-- 未ログイン：サイドバーなし --%>
                     <main class="col-8">
                         ${param.content}
                     </main>
@@ -38,7 +35,6 @@
             </c:choose>
         </div>
 
-        <%-- フッター：背景色維持 --%>
         <footer class="py-2 my-4 bg-dark bg-opacity-10 border-top border-3 align-bottom">
             <c:import url="/common/footer.jsp" />
         </footer>
