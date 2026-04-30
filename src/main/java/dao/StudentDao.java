@@ -1,3 +1,4 @@
+// 野村啓仁
 package dao;
 
 import java.sql.Connection;
@@ -9,10 +10,12 @@ import java.util.List;
 import bean.School;
 import bean.Student;
 
+// 学生情報DB用
 public class StudentDao extends Dao {
 
     private String baseSql = "select * from student where school_cd=?";
 
+    // 学生を1人取得
     public Student get(String no) throws Exception {
         Student student = new Student();
         Connection connection = getConnection();
@@ -26,6 +29,7 @@ public class StudentDao extends Dao {
             SchoolDao schoolDao = new SchoolDao();
 
             if (rSet.next()) {
+                // データをセット
                 student.setNo(rSet.getString("no"));
                 student.setName(rSet.getString("name"));
                 student.setEntYear(rSet.getInt("ent_year"));
@@ -39,13 +43,13 @@ public class StudentDao extends Dao {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
         }
-
         return student;
     }
 
-    private List<Student> postFilter(ResultSet rSet, School school) throws Exception {
+    // リストに変換するやつ
+    private List<Student> postFilter(ResultSet rSet, School school) throws Exception 
+    {
         List<Student> list = new ArrayList<>();
-
         while (rSet.next()) {
             Student student = new Student();
             student.setNo(rSet.getString("no"));
@@ -59,6 +63,7 @@ public class StudentDao extends Dao {
         return list;
     }
 
+    // フィルター検索（3つ指定）
     public List<Student> filter(School school, int entYear, String classNum, boolean isAttend) throws Exception {
         List<Student> list;
         Connection connection = getConnection();
@@ -80,10 +85,10 @@ public class StudentDao extends Dao {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
         }
-
         return list;
     }
 
+    // フィルター検索（入学年度まで）
     public List<Student> filter(School school, int entYear, boolean isAttend) throws Exception {
         List<Student> list;
         Connection connection = getConnection();
@@ -104,11 +109,12 @@ public class StudentDao extends Dao {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
         }
-
         return list;
     }
 
-    public List<Student> filter(School school, boolean isAttend) throws Exception {
+    // フィルター検索（学校のみ）
+    public List<Student> filter(School school, boolean isAttend) throws Exception 
+    {
         List<Student> list;
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -126,10 +132,10 @@ public class StudentDao extends Dao {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
         }
-
         return list;
     }
 
+    // 保存か更新
     public boolean save(Student student) throws Exception {
         Connection connection = getConnection();
         PreparedStatement statement = null;
@@ -137,8 +143,8 @@ public class StudentDao extends Dao {
 
         try {
             Student old = get(student.getNo());
-
             if (old == null) {
+                // 新規作成
                 statement = connection.prepareStatement(
                     "INSERT INTO student(no, name, ent_year, class_num, is_attend, school_cd) VALUES(?, ?, ?, ?, ?, ?)"
                 );
@@ -149,6 +155,7 @@ public class StudentDao extends Dao {
                 statement.setBoolean(5, student.isAttend());
                 statement.setString(6, student.getSchool() != null ? student.getSchool().getCd() : null);
             } else {
+                // 更新
                 statement = connection.prepareStatement(
                     "UPDATE student SET name=?, ent_year=?, class_num=?, is_attend=?, school_cd=? WHERE no=?"
                 );
@@ -159,13 +166,11 @@ public class StudentDao extends Dao {
                 statement.setString(5, student.getSchool() != null ? student.getSchool().getCd() : null);
                 statement.setString(6, student.getNo());
             }
-
             count = statement.executeUpdate();
         } finally {
             if (statement != null) statement.close();
             if (connection != null) connection.close();
         }
-
         return count > 0;
     }
 }

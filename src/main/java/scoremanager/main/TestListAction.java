@@ -1,8 +1,11 @@
+// 上村豪
 package scoremanager.main;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import bean.School;
 import bean.Subject;
 import bean.Teacher;
 import dao.ClassNumDao;
@@ -12,28 +15,36 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
+// 成績参照用
 public class TestListAction extends Action {
-
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
+        School school = teacher.getSchool();
 
-        List<Integer> entYearSet = new ArrayList<>();
-        for (int i = 2016; i <= 2026; i++) {
-            entYearSet.add(i);
+        ClassNumDao classNumDao = new ClassNumDao();
+        SubjectDao subjectDao = new SubjectDao();
+
+        // クラス一覧取得
+        List<String> classList = classNumDao.filter(school);
+
+        // 科目一覧取得
+        List<Subject> subjectList = subjectDao.filter(school);
+
+        // 入学年度リスト作成
+        List<Integer> entYearList = new ArrayList<>();
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = year - 10; i <= year; i++) {
+            entYearList.add(i);
         }
 
-        ClassNumDao cDao = new ClassNumDao();
-        SubjectDao sDao = new SubjectDao();
+        // データセット
+        request.setAttribute("classList", classList);
+        request.setAttribute("subjectList", subjectList);
+        request.setAttribute("entYearList", entYearList);
 
-        List<String> classNumList = cDao.filter(teacher.getSchool());
-        List<Subject> subjects = sDao.filter(teacher.getSchool());
-
-        request.setAttribute("ent_year_set", entYearSet);
-        request.setAttribute("class_num_list", classNumList);
-        request.setAttribute("subjects", subjects);
-
+        // 検索画面へ
         request.getRequestDispatcher("test_list.jsp").forward(request, response);
     }
 }

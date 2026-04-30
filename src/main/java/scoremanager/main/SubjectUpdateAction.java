@@ -1,3 +1,4 @@
+// 野村啓仁
 package scoremanager.main;
 
 import bean.Subject;
@@ -8,21 +9,21 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
+// 科目情報変更画面用
 public class SubjectUpdateAction extends Action {
-
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-        HttpSession session = req.getSession();
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpSession session = request.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
 
-        String cd = req.getParameter("cd");
+        String cd = request.getParameter("cd");
         
+        // 変更対象を取得
         SubjectDao sDao = new SubjectDao();
         Subject subject = sDao.get(cd, teacher.getSchool());
 
-        req.setAttribute("cd", subject.getCd());
-        req.setAttribute("name", subject.getName());
-        
-        req.getRequestDispatcher("subject_update.jsp").forward(req, res);
+        // セットして編集画面へ
+        request.setAttribute("subject", subject);
+        request.getRequestDispatcher("subject_update.jsp").forward(request, response);
     }
 }

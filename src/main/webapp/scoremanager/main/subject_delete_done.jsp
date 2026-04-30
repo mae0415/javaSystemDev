@@ -1,3 +1,5 @@
+<%-- 小垣幸流 --%>
+<%-- 科目削除完了画面用 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -10,10 +12,12 @@
                 科目情報削除
             </h2>
 
+            <%-- 完了メッセージ --%>
             <div class="alert alert-success mx-4">
                 削除が完了しました。
             </div>
 
+            <%-- ナビゲーション --%>
             <p class="ms-4 mt-3">
                 <a href="SubjectList.action">科目一覧へ</a>
             </p>

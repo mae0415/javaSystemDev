@@ -1,3 +1,5 @@
+<%-- 上村豪 --%>
+<%-- ログイン画面用 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 
@@ -8,6 +10,7 @@
 
     <c:param name="scripts">
         <style>
+            /* 入力フォームのスタイル調整 */
             input::-webkit-outer-spin-button,
             input::-webkit-inner-spin-button {
                 -webkit-appearance: none;
@@ -24,6 +27,7 @@
             }
         </style>
         <script>
+            // パスワード可視化切り替え
             function togglePassword() {
                 const passInput = document.getElementById('password');
                 const check = document.getElementById('show-password');
@@ -39,10 +43,19 @@
                     <h2 class="h2 mb-0" style="line-height: 1;">ログイン</h2>
                 </div>
                 <div class="card-body p-4">
+                    <%-- エラー表示 --%>
                     <c:if test="${not empty errors}">
-                        <div class="alert alert-danger py-2 small">${errors}</div>
+                        <div class="mb-3 d-flex align-items-center">
+                            <span class="me-2" style="color: #000000;"></span>
+                            <span style="color: #000000;">
+                                <c:forEach var="error" items="${errors}">
+                                    ${error}
+                                </c:forEach>
+                            </span>
+                        </div>
                     </c:if>
 
+                    <%-- ログインフォーム --%>
                     <form action="LoginExecute.action" method="post">
                         <div class="mb-3">
                             <label for="id" class="form-label text-secondary small">ID</label>

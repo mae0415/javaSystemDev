@@ -1,3 +1,5 @@
+<%-- 小垣幸流 --%>
+<%-- 学生一覧画面用 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
  
@@ -12,10 +14,12 @@
         <section class="me-4">
             <h2 class="h3 mb-3 fw-norma bg-secondary bg-opacity-10 py-2 px-4">学生管理</h2>
  
+            <%-- 新規登録ボタン --%>
             <div class="my-2 text-end px-4">
                 <a href="StudentCreate.action">新規登録</a>
             </div>
  
+            <%-- 検索フィルター --%>
             <form method="get">
                 <div class="row border mx-3 mb-3 py-2 align-items-center rounded" id="filter">
                     <div class="col-4">
@@ -50,10 +54,12 @@
                         <button class="btn btn-secondary" id="filter-button">絞込み</button>
                     </div>
  
+                    <%-- エラーメッセージ --%>
                     <div class="mt-2 text-warning">${errors.get("f1")}</div>
                 </div>
             </form>
  
+            <%-- 学生一覧テーブル --%>
             <c:choose>
                 <c:when test="${students.size() > 0}">
                     <div>検索結果：${students.size()}件</div>
@@ -93,6 +99,7 @@
                     </table>
                 </c:when>
  
+                <%-- データなしの場合 --%>
                 <c:otherwise>
                     <div>学生情報が存在しませんでした。</div>
                 </c:otherwise>

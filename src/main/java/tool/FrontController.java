@@ -1,3 +1,4 @@
+// 野村啓仁
 package tool;
 
 import java.io.IOException;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+// 全リクエストを制御
 @WebServlet("*.action")
 public class FrontController extends HttpServlet {
 
@@ -27,10 +29,9 @@ public class FrontController extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            // 例: /main/StudentList.action
+            // パスからクラス名を特定
             String path = request.getServletPath();
 
-            // StudentListAction を作る
             String className =
                     "scoremanager.main." +
                     path.substring(
@@ -38,12 +39,15 @@ public class FrontController extends HttpServlet {
                         path.indexOf(".action")
                     ) + "Action";
 
+            // インスタンス化して実行
             Class<?> clazz = Class.forName(className);
             Action action = (Action) clazz.getDeclaredConstructor().newInstance();
             action.execute(request, response);
 
         } catch (Exception e) {
-            throw new ServletException(e);
+            // エラー時
+            e.printStackTrace();
+            request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 }

@@ -1,3 +1,5 @@
+<%-- 小垣幸流 --%>
+<%-- 科目削除確認画面用 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -10,11 +12,13 @@
                 科目情報削除
             </h2>
 
+            <%-- 削除対象の確認表示 --%>
             <p class="ms-4">
                 「${subject.name}(${subject.cd})」を削除してもよろしいですか
             </p>
 
             <form action="SubjectDeleteExecute.action" method="post" class="ms-4 mt-3">
+                <%-- 削除対象キーを送信 --%>
                 <input type="hidden" name="cd" value="${subject.cd}">
                 <button type="submit" class="btn btn-danger">削除</button>
             </form>

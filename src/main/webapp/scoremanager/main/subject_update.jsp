@@ -1,3 +1,5 @@
+<%-- 野村啓仁 --%>
+<%-- 科目変更画面用 --%>
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:import url="../../common/base.jsp">
@@ -7,12 +9,14 @@
             <h2 class="h3 mb-3 fw-normal">科目情報変更</h2>
             
             <form action="SubjectUpdateExecute.action" method="post">
+                <%-- 科目コード（表示のみ・値はhidden） --%>
                 <div class="mb-3">
                     <label class="form-label">科目コード</label>
                     <div class="pt-1">${subject.cd}</div>
                     <input type="hidden" name="cd" value="${subject.cd}">
                 </div>
                 
+                <%-- 科目名 --%>
                 <div class="mb-3">
                     <label class="form-label">科目名</label>
                     <input type="text" name="name" class="form-control" value="${subject.name}" 

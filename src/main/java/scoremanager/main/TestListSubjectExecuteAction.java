@@ -1,45 +1,74 @@
+// 前田春太
 package scoremanager.main;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import bean.School;
+import bean.Subject;
 import bean.Teacher;
 import bean.TestListSubject;
+import dao.ClassNumDao;
+import dao.SubjectDao;
 import dao.TestListSubjectDao;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
+// 科目別成績参照実行用
 public class TestListSubjectExecuteAction extends Action {
-
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
         School school = teacher.getSchool();
 
-        int entYear = Integer.parseInt(request.getParameter("f1"));
-        String classNum = request.getParameter("f2");
-        String subjectCd = request.getParameter("f3");
+        // パラメータ取得
+        String entYearStr = request.getParameter("entYear");
+        String classNum = request.getParameter("classNum");
+        String subjectCd = request.getParameter("subject");
 
-        if (entYear == 0 || classNum.equals("0") || subjectCd.equals("0")) {
-            request.setAttribute("errors", "入学年度とクラスと科目を選択してください");
-            new TestListAction().execute(request, response);
+        ClassNumDao cDao = new ClassNumDao();
+        SubjectDao sDao = new SubjectDao();
+        TestListSubjectDao dao = new TestListSubjectDao();
+
+        // プルダウン等のデータ準備
+        List<String> classList = cDao.filter(school);
+        List<Subject> subjectList = sDao.filter(school); 
+
+        List<Integer> entYearList = new ArrayList<>();
+        int year = Calendar.getInstance().get(Calendar.YEAR);
+        for (int i = year - 10; i <= year; i++) {
+            entYearList.add(i);
+        }
+
+        // 入力チェック
+        if (entYearStr == null || entYearStr.isEmpty() || classNum == null || classNum.isEmpty() || subjectCd == null || subjectCd.isEmpty()) {
+            request.setAttribute("classList", classList);
+            request.setAttribute("subjectList", subjectList);
+            request.setAttribute("entYearList", entYearList);
+            request.setAttribute("error", "入学年度とクラスと科目を選択してください");
+            request.getRequestDispatcher("test_list.jsp").forward(request, response);
             return;
         }
 
-        TestListSubjectDao dao = new TestListSubjectDao();
+        // 検索実行
+        int entYear = Integer.parseInt(entYearStr);
         List<TestListSubject> list = dao.filter(entYear, classNum, subjectCd, school);
 
-        if (list == null || list.isEmpty()) {
-            request.setAttribute("errors", "学生情報が存在しませんでした");
-            new TestListAction().execute(request, response);
-        } else {
-            request.setAttribute("tests", list);
-            request.setAttribute("subject_name", list.get(0).getSubjectName());
-            
-            request.getRequestDispatcher("test_list_subject.jsp").forward(request, response);
-        }
+        // データセット
+        request.setAttribute("list", list);
+        request.setAttribute("classList", classList);
+        request.setAttribute("subjectList", subjectList);
+        request.setAttribute("entYearList", entYearList);
+        request.setAttribute("selectedEntYear", entYear);
+        request.setAttribute("selectedClassNum", classNum);
+        request.setAttribute("selectedSubject", subjectCd);
+        request.setAttribute("isSearchExecuted", true);
+
+        // 結果表示
+        request.getRequestDispatcher("test_list.jsp").forward(request, response);
     }
 }

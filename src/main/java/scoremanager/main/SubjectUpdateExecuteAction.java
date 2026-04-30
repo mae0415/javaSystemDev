@@ -1,7 +1,5 @@
+// 野村啓仁
 package scoremanager.main;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import bean.Subject;
 import bean.Teacher;
@@ -11,39 +9,29 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
+// 科目情報変更実行用
 public class SubjectUpdateExecuteAction extends Action {
 
     @Override
-    public void execute(HttpServletRequest req, HttpServletResponse res) throws Exception {
-        HttpSession session = req.getSession();
+    public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        HttpSession session = request.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
 
-        String cd = req.getParameter("cd");
-        String name = req.getParameter("name");
-        
-        SubjectDao sDao = new SubjectDao();
-        Map<String, String> errors = new HashMap<>();
+        // パラメータ取得
+        String cd = request.getParameter("cd");
+        String name = request.getParameter("name");
 
-        if (name == null || name.isEmpty()) {
-            errors.put("name", "科目名を入力してください");
-        }
-
-        if (!errors.isEmpty()) {
-            req.setAttribute("errors", errors);
-            req.setAttribute("cd", cd);
-            req.setAttribute("name", name);
-
-            req.getRequestDispatcher("subject_update.jsp").forward(req, res);
-            return;
-        }
-
+        // 更新データ作成
         Subject subject = new Subject();
         subject.setCd(cd);
         subject.setName(name);
         subject.setSchool(teacher.getSchool());
 
-        sDao.save(subject);
+        // 更新実行
+        SubjectDao sDao = new SubjectDao();
+        sDao.update(subject);
 
-        req.getRequestDispatcher("subject_update_done.jsp").forward(req, res);
+        // 完了画面へ
+        request.getRequestDispatcher("subject_update_done.jsp").forward(request, response);
     }
 }

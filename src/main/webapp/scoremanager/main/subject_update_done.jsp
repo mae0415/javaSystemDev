@@ -1,3 +1,5 @@
+<%-- 野村啓仁 --%>
+<%-- 科目変更完了画面用 --%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
@@ -10,10 +12,12 @@
                 科目情報変更
             </h2>
 
+            <%-- 完了メッセージ --%>
             <div class="alert alert-success mx-4">
                 変更が完了しました。
             </div>
 
+            <%-- ナビゲーション --%>
             <p class="ms-4 mt-3">
                 <a href="SubjectList.action">科目一覧へ</a>
             </p>

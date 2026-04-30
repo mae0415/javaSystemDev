@@ -1,3 +1,5 @@
+<%-- 野村啓仁 --%>
+<%-- 学生変更完了画面用 --%>
 <%@page contentType="text/html; charset=UTF-8" %>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:import url="../../common/base.jsp">
@@ -5,9 +7,13 @@
     <c:param name="content">
         <section class="me-4">
             <h2 class="h3 mb-3 fw-normal">学生情報変更</h2>
+            
+            <%-- 完了メッセージ --%>
             <div class="alert alert-success mt-3" role="alert">
                 変更が完了しました
             </div>
+
+            <%-- ナビゲーション --%>
             <div class="mt-4">
                 <a href="StudentList.action">学生一覧へ戻る</a>
             </div>

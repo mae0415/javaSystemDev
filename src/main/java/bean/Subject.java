@@ -1,34 +1,21 @@
+// 野村啓仁
 package bean;
-
 import java.io.Serializable;
 
+// 科目情報をまとめるためのクラス
 public class Subject implements Serializable {
-
+    // 科目コード
     private String cd;
+    // 科目名
     private String name;
+    // 学校情報
     private School school;
 
-    public String getCd() {
-        return cd;
-    }
-
-    public void setCd(String cd) {
-        this.cd = cd;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public School getSchool() {
-        return school;
-    }
-
-    public void setSchool(School school) {
-        this.school = school;
-    }
+    // getter・setter
+    public String getCd() { return cd; }
+    public void setCd(String cd) { this.cd = cd; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public School getSchool() { return school; }
+    public void setSchool(School school) { this.school = school; }
 }
