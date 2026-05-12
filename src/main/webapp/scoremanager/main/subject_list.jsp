@@ -39,7 +39,7 @@
 
             <%-- データなしの場合 --%>
             <c:if test="${subjects.size() == 0}">
-                <div class="mt-3">科目が登録されていません</div>
+                <div class="mt-3"></div>
             </c:if>
         </section>
     </c:param>

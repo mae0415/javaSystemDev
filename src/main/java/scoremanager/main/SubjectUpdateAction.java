@@ -22,6 +22,14 @@ public class SubjectUpdateAction extends Action {
         SubjectDao sDao = new SubjectDao();
         Subject subject = sDao.get(cd, teacher.getSchool());
 
+        // ★データが存在しない場合のチェック処理を追加
+        if (subject == null) {
+            request.setAttribute("errors", "科目が存在しません");
+            // 画面表示用にコードだけ保持した空のSubjectを渡す
+            subject = new Subject();
+            subject.setCd(cd);
+        }
+
         // セットして編集画面へ
         request.setAttribute("subject", subject);
         request.getRequestDispatcher("subject_update.jsp").forward(request, response);

@@ -59,7 +59,7 @@
                     <form action="LoginExecute.action" method="post">
                         <div class="mb-3">
                             <label for="id" class="form-label text-secondary small">ID</label>
-                            <input type="text" name="id" id="id" class="form-control bg-light" required value="${id}">
+                            <input type="text" name="id" id="id" class="form-control" required value="${id}">
                         </div>
 
                         <div class="mb-3">

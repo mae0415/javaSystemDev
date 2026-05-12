@@ -38,6 +38,10 @@ public class StudentCreateAction extends Action {
         List<String> classList = cDao.filter(school);
 
         if (method.equals("GET")) {
+
+            request.removeAttribute("error_ent");
+            request.removeAttribute("error_no");
+
             // 初期表示
             request.setAttribute("year_list", yearList);
             request.setAttribute("class_list", classList);
@@ -50,9 +54,8 @@ public class StudentCreateAction extends Action {
             String name = request.getParameter("name");
             String classNum = request.getParameter("class_num");
 
-            // 入力チェック
             if (entYearStr == null || entYearStr.isEmpty() || entYearStr.equals("0")) {
-                request.setAttribute("error", "入学年度を選択してください");
+                request.setAttribute("error_ent", "入学年度を選択してください");
                 request.setAttribute("year_list", yearList);
                 request.setAttribute("class_list", classList);
                 request.setAttribute("no", no);
@@ -63,10 +66,9 @@ public class StudentCreateAction extends Action {
                 return;
             }
 
-            // 重複チェック
             StudentDao sDao = new StudentDao();
             if (sDao.get(no) != null) {
-                request.setAttribute("errors", "学生番号が重複しています");
+                request.setAttribute("error_no", "学生番号が重複しています");
                 request.setAttribute("year_list", yearList);
                 request.setAttribute("class_list", classList);
                 request.setAttribute("no", no);

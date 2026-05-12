@@ -17,18 +17,35 @@ public class SubjectUpdateExecuteAction extends Action {
         HttpSession session = request.getSession();
         Teacher teacher = (Teacher) session.getAttribute("user");
 
-        // パラメータ取得
+        // 画面から送られてきた値を取得
         String cd = request.getParameter("cd");
         String name = request.getParameter("name");
 
-        // 更新データ作成
+        SubjectDao sDao = new SubjectDao();
+        
+        // ★【重要】更新する直前に、もう一度DBにデータがあるか確認する
+        Subject exist = sDao.get(cd, teacher.getSchool());
+
+        if (exist == null) {
+            // 他のタブで既に削除されていた場合のエラー処理
+            request.setAttribute("errors", "科目が存在しません");
+            
+            Subject sub = new Subject();
+            sub.setCd(cd);
+            sub.setName(name);
+            request.setAttribute("subject", sub);
+
+            // 変更画面に戻す
+            request.getRequestDispatcher("subject_update.jsp").forward(request, response);
+            return;
+        }
+
+        // 正常な更新処理
         Subject subject = new Subject();
         subject.setCd(cd);
         subject.setName(name);
         subject.setSchool(teacher.getSchool());
 
-        // 更新実行
-        SubjectDao sDao = new SubjectDao();
         sDao.update(subject);
 
         // 完了画面へ

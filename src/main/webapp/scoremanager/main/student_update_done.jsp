@@ -15,7 +15,7 @@
 
             <%-- ナビゲーション --%>
             <div class="mt-4">
-                <a href="StudentList.action">学生一覧へ戻る</a>
+                <a href="StudentList.action">学生一覧</a>
             </div>
         </section>
     </c:param>

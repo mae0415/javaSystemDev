@@ -24,6 +24,9 @@ public class StudentCreateExecuteAction extends Action {
         Teacher teacher = (Teacher) session.getAttribute("user");
         School school = teacher.getSchool();
 
+        request.removeAttribute("error_ent");
+        request.removeAttribute("error_no");
+
         String entYearStr = request.getParameter("ent_year");
         String no = request.getParameter("no");
         String name = request.getParameter("name");

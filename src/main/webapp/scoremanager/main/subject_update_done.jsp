@@ -19,7 +19,7 @@
 
             <%-- ナビゲーション --%>
             <p class="ms-4 mt-3">
-                <a href="SubjectList.action">科目一覧へ</a>
+                <a href="SubjectList.action">科目一覧</a>
             </p>
         </section>
     </c:param>
