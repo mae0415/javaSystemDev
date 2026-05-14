@@ -27,8 +27,33 @@ public class TestRegistExecuteAction extends Action {
         String subjectCd = request.getParameter("subjectCd");
         String testNoStr = request.getParameter("testNo");
         String classNum = request.getParameter("classNum");
+        String entYearStr = request.getParameter("entYear"); 
+        
         String[] studentNoList = request.getParameterValues("studentNo");
         String[] pointList = request.getParameterValues("point");
+
+        if (pointList != null) {
+            List<String> errorStudentNos = new ArrayList<>();
+            for (int i = 0; i < pointList.length; i++) {
+                if (pointList[i] != null && !pointList[i].isEmpty()) {
+                    int p = Integer.parseInt(pointList[i]);
+                    if (p < 0 || p > 100) {
+                        errorStudentNos.add(studentNoList[i]);
+                    }
+                }
+            }
+
+            if (!errorStudentNos.isEmpty()) {
+                List<String> errors = new ArrayList<>();
+                errors.add("0〜100の範囲で入力してください");
+                request.setAttribute("errors", errors);
+                request.setAttribute("errorStudentNos", errorStudentNos);
+
+                // エラー時は検索処理へ戻る
+                request.getRequestDispatcher("TestRegist.action").forward(request, response);
+                return;
+            }
+        }
 
         TestDao tDao = new TestDao();
         SubjectDao sDao = new SubjectDao();
@@ -36,7 +61,6 @@ public class TestRegistExecuteAction extends Action {
 
         List<Test> tests = new ArrayList<>();
 
-        // リスト作成
         if (studentNoList != null && testNoStr != null) {
             int testNo = Integer.parseInt(testNoStr);
             for (int i = 0; i < studentNoList.length; i++) {
@@ -47,7 +71,6 @@ public class TestRegistExecuteAction extends Action {
                 test.setNo(testNo);
                 test.setClassNum(classNum);
 
-                // 得点のセット
                 if (pointList[i] != null && !pointList[i].isEmpty()) {
                     test.setPoint(Integer.parseInt(pointList[i]));
                 } else {
@@ -57,10 +80,8 @@ public class TestRegistExecuteAction extends Action {
             }
         }
 
-        // 保存実行
         tDao.save(tests);
         
-        // 完了画面へ
         request.getRequestDispatcher("test_regist_done.jsp").forward(request, response);
     }
 }

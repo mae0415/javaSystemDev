@@ -59,13 +59,22 @@
                         <input type="submit" value="検索" class="btn btn-secondary btn-sm px-3 shadow-sm">
                     </div>
                 </div>
+
+                <%-- 未入力エラーがある場合に表示 --%>
+                <c:if test="${not empty error}">
+                    <div class="mb-4" style="color: #ffc107;">
+                        <c:out value="${error}" />
+                    </div>
+                </c:if>
             </form>
 
             <%-- 成績入力テーブル --%>
             <c:if test="${not empty testList}">
                 <div class="mb-2 text-dark fw-bold">科目：${subjectName} (${testNo}回)</div>
+
                 <form action="TestRegistExecute.action" method="post">
-                    <%-- 検索条件をhiddenで保持 --%>
+                    <%-- 検索条件をhiddenで保持（再表示用） --%>
+                    <input type="hidden" name="entYear" value="${entYear}">
                     <input type="hidden" name="subjectCd" value="${subjectCd}">
                     <input type="hidden" name="testNo" value="${testNo}">
                     <input type="hidden" name="classNum" value="${classNum}">
@@ -88,33 +97,29 @@
                                     <td>${test.student.no}</td>
                                     <td>${test.student.name}</td>
                                     <td>
-                                        <%-- 学生番号と入力点数をペアで送信 --%>
                                         <input type="hidden" name="studentNo" value="${test.student.no}">
-                  
                                         <input type="number" name="point" 
                                                value="${test.point == -1 ? 0 : test.point}" 
                                                class="form-control form-control-sm bg-white" 
-                                               style="width: 80px;" min="0" max="100">
-                                               
-                                               
+                                               style="width: 150px;">
+                                        
+                                        <%-- エラー判定：該当者のみ表示。普段は余白を作らない --%>
+                                        <c:forEach var="errNo" items="${errorStudentNos}">
+                                            <c:if test="${errNo == test.student.no}">
+                                                <div class="small mt-1" style="color: #ffc107; white-space: nowrap;">
+                                                    0〜100の範囲で入力してください
+                                                </div>
+                                            </c:if>
+                                        </c:forEach>
                                     </td>
                                 </tr>
                             </c:forEach>
                         </tbody>
                     </table>
                     <div class="mt-3">
-                        <button type="submit" class="btn btn-secondary">登録して終了</button>
+                        <button type="submit" class="btn btn-secondary px-3">登録して終了</button>
                     </div>
                 </form>
-            </c:if>
-
-            <%-- エラー表示 --%>
-            <c:if test="${not empty errors}">
-                <div class="alert alert-danger mt-3 py-2">
-                    <c:forEach var="error" items="${errors}">
-                        <div class="small">${error}</div>
-                    </c:forEach>
-                </div>
             </c:if>
         </section>
     </c:param>

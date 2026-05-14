@@ -38,7 +38,7 @@ public class TestListStudentExecuteAction extends Action {
             studentNo = request.getParameter("f4");
         }
 
-        // 初期表示用データの準備
+        // 初期表示
         ClassNumDao classNumDao = new ClassNumDao();
         SubjectDao subjectDao = new SubjectDao();
         request.setAttribute("classList", classNumDao.filter(school));
@@ -64,15 +64,12 @@ public class TestListStudentExecuteAction extends Action {
                 TestListStudentDao dao = new TestListStudentDao();
                 List<TestListStudent> list = dao.filter(target);
 
-                if (list == null || list.isEmpty()) {
-                    request.setAttribute("error", "成績情報が存在しませんでした");
-                } else {
+                if (list != null && !list.isEmpty()) {
                     request.setAttribute("tests_student", list);
                 }
             }
         } else if (request.getParameterMap().containsKey("studentNo") || request.getParameterMap().containsKey("f4")) {
-            // 未入力時の処理（現在は何も行わない）
-            
+            // 未入力時の処理
         }
 
         request.setAttribute("isSearchExecuted", true);

@@ -61,6 +61,8 @@ public class TestRegistAction extends Action {
             request.setAttribute("testList", testList);
             request.setAttribute("subjectName", subject.getName());
             request.setAttribute("testNo", testNo);
+        } else if (entYearStr != null || classNum != null || subjectCd != null || testNoStr != null) {
+            request.setAttribute("error", "入学年度とクラスと科目と回数を選択してください");
         }
 
         // データセット

@@ -22,12 +22,10 @@ public class SubjectUpdateExecuteAction extends Action {
         String name = request.getParameter("name");
 
         SubjectDao sDao = new SubjectDao();
-        
-        // ★【重要】更新する直前に、もう一度DBにデータがあるか確認する
+
         Subject exist = sDao.get(cd, teacher.getSchool());
 
         if (exist == null) {
-            // 他のタブで既に削除されていた場合のエラー処理
             request.setAttribute("errors", "科目が存在しません");
             
             Subject sub = new Subject();
@@ -40,7 +38,7 @@ public class SubjectUpdateExecuteAction extends Action {
             return;
         }
 
-        // 正常な更新処理
+        // 更新処理
         Subject subject = new Subject();
         subject.setCd(cd);
         subject.setName(name);

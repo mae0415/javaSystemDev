@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import tool.Action;
 
-// 科目別成績参照実行用
 public class TestListSubjectExecuteAction extends Action {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -25,7 +24,6 @@ public class TestListSubjectExecuteAction extends Action {
         Teacher teacher = (Teacher) session.getAttribute("user");
         School school = teacher.getSchool();
 
-        // パラメータ取得
         String entYearStr = request.getParameter("entYear");
         String classNum = request.getParameter("classNum");
         String subjectCd = request.getParameter("subject");
@@ -34,7 +32,6 @@ public class TestListSubjectExecuteAction extends Action {
         SubjectDao sDao = new SubjectDao();
         TestListSubjectDao dao = new TestListSubjectDao();
 
-        // プルダウン等のデータ準備
         List<String> classList = cDao.filter(school);
         List<Subject> subjectList = sDao.filter(school); 
 
@@ -44,31 +41,38 @@ public class TestListSubjectExecuteAction extends Action {
             entYearList.add(i);
         }
 
-        // 入力チェック
+        // ① 入学年度・クラス・科目のいずれかが未選択の場合
         if (entYearStr == null || entYearStr.isEmpty() || classNum == null || classNum.isEmpty() || subjectCd == null || subjectCd.isEmpty()) {
             request.setAttribute("classList", classList);
             request.setAttribute("subjectList", subjectList);
             request.setAttribute("entYearList", entYearList);
-            request.setAttribute("error", "入学年度とクラスと科目を選択してください");
+            request.setAttribute("selectedEntYear", entYearStr);
+            request.setAttribute("selectedClassNum", classNum);
+            request.setAttribute("selectedSubject", subjectCd);
+            // カード内に表示するエラー
+            request.setAttribute("input_error", "入学年度とクラスと科目を選択してください");
             request.getRequestDispatcher("test_list.jsp").forward(request, response);
             return;
         }
 
-        // 検索実行
         int entYear = Integer.parseInt(entYearStr);
         List<TestListSubject> list = dao.filter(entYear, classNum, subjectCd, school);
 
-        // データセット
-        request.setAttribute("list", list);
+        // ② すべて選択したが学生情報が存在しない場合
+        if (list == null || list.isEmpty()) {
+            // カード外に表示するエラー
+            request.setAttribute("error", "学生情報が存在しませんでした");
+        } else {
+            request.setAttribute("list", list);
+        }
+
         request.setAttribute("classList", classList);
         request.setAttribute("subjectList", subjectList);
         request.setAttribute("entYearList", entYearList);
         request.setAttribute("selectedEntYear", entYear);
         request.setAttribute("selectedClassNum", classNum);
         request.setAttribute("selectedSubject", subjectCd);
-        request.setAttribute("isSearchExecuted", true);
 
-        // 結果表示
         request.getRequestDispatcher("test_list.jsp").forward(request, response);
     }
 }

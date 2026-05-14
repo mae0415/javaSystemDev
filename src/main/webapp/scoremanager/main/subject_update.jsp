@@ -14,8 +14,7 @@
                     <label class="form-label">科目コード</label>
                     <div class="pt-1">${subject.cd}</div>
                     <input type="hidden" name="cd" value="${subject.cd}">
-                    
-                    <%-- ★追加：ここがエラー表示「①」の部分 --%>
+
                     <c:if test="${not empty errors}">
                         <div class="small mt-1" style="color: #ffc107;">${errors}</div>
                     </c:if>

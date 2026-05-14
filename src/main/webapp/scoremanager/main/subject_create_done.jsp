@@ -12,15 +12,16 @@
                 科目情報登録
             </h2>
 
-            <%-- 完了メッセージ --%>
             <div class="alert alert-success mx-4">
                 登録が完了しました。
             </div>
 
-            <%-- ナビゲーション --%>
-            <p class="ms-4 mt-3">
+            <div class="ms-4 mt-3 d-flex gap-5">
+
+                <a href="SubjectCreate.action">戻る</a>
+
                 <a href="SubjectList.action">科目一覧へ</a>
-            </p>
+            </div>
         </section>
     </c:param>
 </c:import>
